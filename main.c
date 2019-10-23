@@ -28,9 +28,11 @@
 
 #include "LCD.h"
 #include "Dspic.h"
+#include "DCI.h"
 
 int main()
 {
+    //INITIALISATION
     _LCDinit();
     _LED1init();
     _LED2init();
@@ -38,9 +40,9 @@ int main()
     _LED4init();
     _LCDhomeclear();
     _LCDwritechar('o');
-    while(1);
     
-     
+    _DCIinit(); 
+    while(1);
 }
 
 void __attribute__((interrupt,auto_psv)) _INT1Interrupt(void)

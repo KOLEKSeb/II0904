@@ -9,11 +9,11 @@
 #ifndef DSPIC_H
 #define	DSPIC_H
 
-void _LED1init();
-void _LED2init();
-void _LED3init();
-void _LED4init();
-void _DSPICinit();
+void _LED1init();               //Initialisation LED1
+void _LED2init();               //Initialisation LED2
+void _LED3init();               //Initialisation LED3
+void _LED4init();               //Initialisation LED4
+void _DSPICinit();              //Initialisation DSPIC
 
 #endif
 

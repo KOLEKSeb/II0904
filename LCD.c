@@ -9,30 +9,29 @@
 
 void _LCDinit (void)
 {
+    LATGbits.LATG9=1;           //Select slave
+    TRISGbits.TRISG9=0;         //RG9 => SDI2 (LCD)
     
-    SPI2CONbits.MSTEN=1; //Master mode enable
-    SPI2CONbits.PPRE=1; //Primary Prescale (Master Mode) bits
-    SPI2CONbits.SPRE=7; //Secondary Prescale (Master Mode) bits
-    SPI2CONbits.CKE=1; //SPI Clock Edge Select bit
-    SPI2CONbits.CKP=1; //Clock Polarity Select bit
     
-    TRISGbits.TRISG9=0; //RG9 => SDI2 (LCD)
+    SPI2CONbits.MSTEN=1;        //Master mode enable
+    SPI2CONbits.PPRE=1;         //Primary Prescale (Master Mode) bits
+    SPI2CONbits.SPRE=7;         //Secondary Prescale (Master Mode) bits
+    SPI2CONbits.CKE=0;          //SPI Clock Edge Select bit
+    SPI2CONbits.CKP=0;          //Clock Polarity Select bit
     LATGbits.LATG9=0;
-    SPI1STATbits.SPIEN=1; //SPI Enable bit
+    
+    SPI2STATbits.SPIEN=1;       //SPI Enable bit
 }
 
 void _LCDwritecmd(char c)
 {
-    SPI2BUF=c;
-    while(SPI2STATbits.SPITBF);
+    SPI2BUF=c;                  //Transmit and Receive Buffer Address shared by SPI2TXB and SPI2RXB registers
+    while(SPI2STATbits.SPITBF); //Transmit Buffer Full Status bit
 }
 void _LCDwritechar(char c)
 {
-    SPI2BUF=WRITECHAR;
-    while(SPI2STATbits.SPITBF);
-    SPI2BUF=c;
-    while(SPI2STATbits.SPITBF);
-    
+    _LCDwritecmd(WRITECHAR);
+    _LCDwritecmd(c);
 }
 void _LCDbitmap(int a)
 {
@@ -40,18 +39,15 @@ void _LCDbitmap(int a)
 }
 void _LCDreset()
 {
-    SPI2BUF=RESET;
-    while(SPI2STATbits.SPITBF);
+    _LCDwritecmd(RESET);
 }
 void _LCDhome()
 {
-    SPI2BUF=HOME;
-    while(SPI2STATbits.SPITBF);
+    _LCDwritecmd(HOME);
 }
 void _LCDhomeclear()
 {
-    SPI2BUF=HOMECLEAR;
-    while(SPI2STATbits.SPITBF);
+    _LCDwritecmd(HOMECLEAR);
 }
 void _LCDgoto(int l, int c)
 {
