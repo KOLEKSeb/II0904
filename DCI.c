@@ -31,12 +31,13 @@ void _DCIinit()
     DCICON2bits.BLEN=0x1 ; // utilisation de buffers de taille 2 entre interruptions
     
     //g) préparation de l'écriture des premières données d'initialisation dans les buffers
-    TXBUF0=0x0001 ; //secondary frame
-    //TXBUF1=0x0nXX ; // n : index registre, XX valeur à transmettre
     
-    // h) reset du SI3000
-    // positionnement en non reset
-    //PORTF6bits.RF6=1 ;
+    TXBUF0=0x0001;
+    TXBUF1=0x0300;
+    
+    //h) reset du SI3000
+    //positionnement en non reset
+    PORTFbits.RF6=1 ;
     //programmation en sortie
     TRISFbits.TRISF6=0 ;
     // application d'un reset
@@ -50,10 +51,8 @@ void _DCIinit()
 
     //j) attente de fin d'émission et envoi des données suivantes
     while(DCISTATbits.TMPTY==0); // attente TXBUF vidé
-    
-    TXBUF0=0x0001;
-    TXBUF1=0x0300;
-    while(DCISTATbits.TMPTY==0); // attente TXBUF vidé
+   
+  
     
     TXBUF0=0x0001;
     TXBUF1=0x0413;
@@ -76,7 +75,7 @@ void _DCIinit()
     while(DCISTATbits.TMPTY==0); // attente TXBUF vidé
     
     TXBUF0=0x0001;
-    TXBUF1=0x075C;
+    TXBUF1=0x073C;
     while(DCISTATbits.TMPTY==0); // attente TXBUF vidé
     
     TXBUF0=0x0001;
@@ -91,30 +90,9 @@ void _DCIinit()
     
 }
 
-void _DCIsend(unsigned int* a, int TAILLE)
-{ 
-    int k=0;
-    while(a[k] != TAILLE)
-    {
-    TXBUF0=0x0001;
-    TXBUF1=a[k];
-    while(DCISTATbits.TMPTY==0);
-    k++;
-    }
-}
 
-void _DCIsinus()
-{
-    int Sin[]={0x0000,0x2975,0x4E73,0x6AFA,0x7BF9,0x7F99,0x7578,0x5EAB,0x3DA9,
-    0x1601,0xEBFB,0xC41C,0xA2B2,0x8B59,0x8093,0x838B,0x93EE,0xAFF9,0xD4A5,0xFDFE};
-    int k=0;
-    for (k=0; k<20; k++)
-    {
-    TXBUF0=0x0001;
-    TXBUF1=Sin[k];
-    while(DCISTATbits.TMPTY==0);
-    }
-}
+
+
 
 void _wait(unsigned int time10mus)
 {
